@@ -13,7 +13,10 @@
         <Label Content="Password" HorizontalAlignment="Left" />
         <PasswordBox Name="txtPassword" HorizontalAlignment="Left"  Width="150" Height="50"/>
 
-        <Button Content="Login" Click="LoginButton_Click" Margin="0 20 0 0 "/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Login" Click="LoginButton_Click" Margin="10"/>
+            <Button Content="Add User" Click="AddUserButton_Click" Margin="10"/>
+        </StackPanel>
 
         <TextBlock Name="lblError" Foreground="Red"  />
         <TextBlock Name="lblSuccess" Foreground="Green" />
