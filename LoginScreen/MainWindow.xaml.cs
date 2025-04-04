@@ -64,7 +64,7 @@ namespace LoginScreen
         public bool ValidateUserSafe(string username, string password)
         {
             var connectionString = "Data Source=..\\..\\..\\DB\\LoginDB.db;Version=3;";
-            var readCommand = "SELECT password FROM Users WHERE Username = @username";
+            var readCommand = "SELECT hashedPassword FROM Users WHERE Username = @username";
 
             using (var connection = new SQLiteConnection(connectionString))
             {
@@ -85,15 +85,15 @@ namespace LoginScreen
         {
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
             var connectionString = "Data Source=..\\..\\..\\DB\\LoginDB.db;Version=3;";
-            var insertCommand = "INSERT INTO Users (username, password) VALUES (@username, @password)";
+            var insertCommand = "INSERT INTO Users (username, hashedPassword) VALUES (@username, @hashedPassword)";
 
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
                 var command = new SQLiteCommand(insertCommand, connection);
                 command.Parameters.AddWithValue("@username", username);
-                command.Parameters.AddWithValue("@password", hashedPassword);
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("@hashedPassword", hashedPassword);
+                command.ExecuteScalar();
             }
         }
 
