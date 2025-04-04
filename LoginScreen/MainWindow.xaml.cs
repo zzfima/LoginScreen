@@ -96,6 +96,5 @@ namespace LoginScreen
                 command.ExecuteScalar();
             }
         }
-
     }
 }
