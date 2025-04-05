@@ -18,7 +18,7 @@ namespace LoginScreen
             lblSuccess.Text = string.Empty;
             lblError.Text = string.Empty;
 
-            var isExist = ValidateUserSafe(txtUsername.Text, txtPassword.Password);
+            var isExist = ValidateUser(txtUsername.Text, txtPassword.Password);
             if (isExist)
             {
                 lblSuccess.Text = "Login successful!";
@@ -38,20 +38,29 @@ namespace LoginScreen
         //bad practice
         /*
             1. SQL Injection: The query is vulnerable to SQL injection because user input is directly concatenated into the SQL query.
+                ' OR 1=1 --
+                '; DROP TABLE moro; --
             2. Plaintext Passwords: Storing passwords as plaintext is a huge security risk.
          */
         public bool ValidateUser(string username, string password)
         {
             var connectionString = "Data Source=..\\..\\..\\DB\\LoginDB.db;Version=3;";
-            var readCommand = $"SELECT * FROM Users WHERE Username = '{username}' AND Password = '{password}'";
+            var readCommand = $"SELECT * FROM Users WHERE username = '{username}' AND hashedPassword = '{password}'";
 
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
                 var command = new SQLiteCommand(readCommand, connection);
-                using (var reader = command.ExecuteReader())
+                try
                 {
-                    return reader.HasRows;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        return reader.HasRows;
+                    }
+                }
+                catch (Exception)
+                {
+                    return false; 
                 }
             }
         }
@@ -64,7 +73,7 @@ namespace LoginScreen
         public bool ValidateUserSafe(string username, string password)
         {
             var connectionString = "Data Source=..\\..\\..\\DB\\LoginDB.db;Version=3;";
-            var readCommand = "SELECT hashedPassword FROM Users WHERE Username = @username";
+            var readCommand = "SELECT hashedPassword FROM Users WHERE username = @username";
 
             using (var connection = new SQLiteConnection(connectionString))
             {
