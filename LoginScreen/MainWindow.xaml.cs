@@ -18,7 +18,7 @@ namespace LoginScreen
             lblSuccess.Text = string.Empty;
             lblError.Text = string.Empty;
 
-            var isExist = ValidateUser(txtUsername.Text, txtPassword.Password);
+            var isExist = ValidateUserSafe(txtUsername.Text, txtPassword.Password);
             if (isExist)
             {
                 lblSuccess.Text = "Login successful!";
